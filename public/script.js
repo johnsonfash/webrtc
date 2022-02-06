@@ -1,6 +1,6 @@
 var socket = io("/");
 var videoGrid = document.getElementById("video-grid");
-var myVideo = document.createElement("audio");
+var myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 myVideo.muted = true;
@@ -20,7 +20,7 @@ showChat.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "block";
 });
 
-const user = Math.random()+'rgba';
+const user = Math.random() + 'rgba';
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -41,7 +41,7 @@ const addVideoStream = (video, stream) => {
 
 const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
-  const video = document.createElement("audio");
+  const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -51,7 +51,7 @@ const connectToNewUser = (userId, stream) => {
 window.navigator.mediaDevices
   .getUserMedia({
     audio: true,
-    video: false,
+    video: true,
   })
   .then((stream) => {
     myVideoStream = stream;
@@ -138,9 +138,8 @@ socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${
-          userName === user ? "me" : userName
-        }</span> </b>
+        <b><i class="far fa-user-circle"></i> <span> ${userName === user ? "me" : userName
+    }</span> </b>
         <span>${message}</span>
     </div>`;
 });
