@@ -18,7 +18,8 @@ const peerServer = ExpressPeerServer(server, { debug: true })
 app.use('/peerjs', peerServer);
 
 app.get('/', (req, res) => {
-  res.redirect(`/${uuid().substring(0, 7)}`)
+  res.send('Hello World')
+  // res.redirect(`/${uuid().substring(0, 7)}`)
 })
 
 app.get('/:room', (req, res) => {
