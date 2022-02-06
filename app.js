@@ -25,12 +25,15 @@ app.get('/:room', (req, res) => {
   res.render('room', { roomId: req.params.room })
 })
 
-io.on('connection', (socket) => {
-  socket.on('join-room', (roomId, userId) => {
+io.on("connection", (socket) => {
+  socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
-    socket.to(roomId).broadcast.emit('user-connected', userId);
-  })
-})
+    socket.to(roomId).broadcast.emit("user-connected", userId);
+    socket.on("message", (message) => {
+      io.to(roomId).emit("createMessage", message, userName);
+    });
+  });
+});
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
