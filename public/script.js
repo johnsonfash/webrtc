@@ -49,7 +49,7 @@ navigator.mediaDevices.getUserMedia({
   });
 
 peer.on('open', (id) => {
-  socket.emit('join-room', ROOM_ID, id)
+  socket.emit('join-room', ROOM_ID, id, user)
 })
 
 let text = document.querySelector('#chat_message')
