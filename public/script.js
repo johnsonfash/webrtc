@@ -1,9 +1,10 @@
-const socket = io("/");
-const videoGrid = document.getElementById("video-grid");
-const myVideo = document.createElement("video");
+var socket = io("/");
+var videoGrid = document.getElementById("video-grid");
+var myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 myVideo.muted = true;
+var myVideoStream;
 
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
@@ -27,8 +28,27 @@ var peer = new Peer(undefined, {
   port: "443",
 });
 
-let myVideoStream;
-navigator.mediaDevices
+
+
+const addVideoStream = (video, stream) => {
+  video.srcObject = stream;
+  video.addEventListener("loadedmetadata", () => {
+    video.play();
+    videoGrid.append(video);
+  });
+};
+
+
+const connectToNewUser = (userId, stream) => {
+  const call = peer.call(userId, stream);
+  const video = document.createElement("video");
+  call.on("stream", (userVideoStream) => {
+    addVideoStream(video, userVideoStream);
+  });
+};
+
+
+window.navigator.mediaDevices
   .getUserMedia({
     audio: true,
     video: true,
@@ -36,7 +56,6 @@ navigator.mediaDevices
   .then((stream) => {
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
-
     peer.on("call", (call) => {
       call.answer(stream);
       const video = document.createElement("video");
@@ -50,25 +69,12 @@ navigator.mediaDevices
     });
   });
 
-const connectToNewUser = (userId, stream) => {
-  const call = peer.call(userId, stream);
-  const video = document.createElement("video");
-  call.on("stream", (userVideoStream) => {
-    addVideoStream(video, userVideoStream);
-  });
-};
+
 
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id, user);
 });
 
-const addVideoStream = (video, stream) => {
-  video.srcObject = stream;
-  video.addEventListener("loadedmetadata", () => {
-    video.play();
-    videoGrid.append(video);
-  });
-};
 
 let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
