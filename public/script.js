@@ -1,6 +1,6 @@
 var socket = io("/");
 var videoGrid = document.getElementById("video-grid");
-var myVideo = document.createElement("video");
+var myVideo = document.createElement("audio");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 myVideo.muted = true;
@@ -41,7 +41,7 @@ const addVideoStream = (video, stream) => {
 
 const connectToNewUser = (userId, stream) => {
   const call = peer.call(userId, stream);
-  const video = document.createElement("video");
+  const video = document.createElement("audio");
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
@@ -51,14 +51,14 @@ const connectToNewUser = (userId, stream) => {
 window.navigator.mediaDevices
   .getUserMedia({
     audio: true,
-    video: true,
+    video: false,
   })
   .then((stream) => {
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
     peer.on("call", (call) => {
       call.answer(stream);
-      const video = document.createElement("video");
+      const video = document.createElement("audio");
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
