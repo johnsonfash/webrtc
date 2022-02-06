@@ -3,8 +3,10 @@ const socket = io('/');
 var peer = new Peer(undefined, {
   path: '/peerjs',
   host: '/',
-  port: window.location.port
+  port: "443" || window.location.port
 })
+
+const user = prompt("Enter your name");
 
 var myVideoStream;
 const videoGrid = document.getElementById("video-grid");
@@ -35,6 +37,7 @@ navigator.mediaDevices.getUserMedia({
   .then((stream) => {
     myVideoStream = stream;
     addVideoStream(myVideoEl, stream);
+
     peer.on('call', (call) => {
       call.answer(stream);
       const video = document.createElement('video');
@@ -47,6 +50,7 @@ navigator.mediaDevices.getUserMedia({
       connectToNewUser(userId, stream)
     })
   });
+
 
 peer.on('open', (id) => {
   socket.emit('join-room', ROOM_ID, id, user)
@@ -111,8 +115,6 @@ inviteButton.addEventListener("click", (e) => {
     window.location.href
   );
 });
-
-
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
