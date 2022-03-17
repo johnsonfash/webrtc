@@ -29,7 +29,6 @@ var peer = new Peer(undefined, {
 });
 
 
-
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
@@ -46,7 +45,6 @@ const connectToNewUser = (userId, stream) => {
     addVideoStream(video, userVideoStream);
   });
 };
-
 
 window.navigator.mediaDevices
   .getUserMedia({
