@@ -36,6 +36,7 @@ const addVideoStream = (video, stream) => {
     videoGrid.append(video);
   });
   console.log('added')
+  console.log(stream)
 };
 
 
